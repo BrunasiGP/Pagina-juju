@@ -67,6 +67,8 @@
     #spanish-invite {
       display: none;
       margin-top: 10px;
+      z-index: 3; /* Por encima de las imágenes */
+      position: relative;
     }
     #ramen-image {
       display: none;
@@ -83,7 +85,7 @@
       position: absolute;
       width: 100px;
       height: auto;
-      z-index: 2; /* Ahora las imágenes están por encima */
+      z-index: 2; /* Por encima del contenedor, pero por debajo de #spanish-invite */
     }
     #amor1 { top: 10px; left: 10px; }
     #amor2 { top: 10px; right: 10px; }
@@ -105,7 +107,7 @@
     <div id="ramen-box">
       <p>ラーメンを一緒に食べに行きたい？</p>
       <button id="invite-button" onclick="document.getElementById('spanish-invite').style.display='block'; this.textContent='Por supuesto'; this.onclick=function(){document.getElementById('ramen-image').style.display='block'; document.getElementById('itadakimasu').style.display='block'}">¿Qué?</button>
-      <div id="spanish-invite">Querés ir a comer ramen conmigo?</div>
+      <div id="spanish-invite">Querós ir a comer ramen conmigo?</div>
     </div>
     <img id="ramen-image" src="ramen.jpg" alt="Ramen">
     <div id="itadakimasu">いただきます</div>
