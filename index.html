@@ -1,0 +1,150 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regalo Especial</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5e6f0;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+    .container {
+      text-align: center;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    h1 {
+      font-size: 24px;
+      animation: colorChange 3s infinite;
+    }
+    @keyframes colorChange {
+      0% { color: #d81b60; }
+      33% { color: #8e24aa; }
+      66% { color: #0288d1; }
+      100% { color: #d81b60; }
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #d81b60;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #c2185b;
+    }
+    #special-message {
+      display: none;
+      margin-top: 15px;
+      color: red;
+      font-style: italic;
+    }
+    #ramen-box {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff0e6;
+      border-radius: 10px;
+    }
+    #spanish-invite {
+      display: none;
+      margin-top: 10px;
+    }
+    #ramen-image {
+      display: none;
+      margin-top: 10px;
+    }
+    #itadakimasu {
+      display: none;
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .corner-image {
+      display: none;
+      position: absolute;
+      width: 100px;
+      height: auto;
+    }
+    #amor1 { top: 10px; left: 10px; }
+    #amor2 { top: 10px; right: 10px; }
+    #amor3 { bottom: 10px; left: 10px; }
+    #amor4 { bottom: 10px; right: 10px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Felicidades, eres el visitante 10000, GANASTE</h1>
+    <button id="reclaim-button" onclick="document.getElementById('special-message').style.display='block'; window.open('victoria_secret.jpg', '_blank'); document.getElementById('ramen-box').style.display='block'; document.getElementById('amor1').style.display='block'; document.getElementById('amor2').style.display='block'; document.getElementById('amor3').style.display='block'; document.getElementById('amor4').style.display='block'; this.style.display='none'">Presiona para reclamar</button>
+    <div id="special-message">Te amo bombón <3</div>
+    <div id="ramen-box">
+      <p>ラーメンを一緒に食べに行きたい？</p>
+      <button id="invite-button" onclick="document.getElementById('spanish-invite').style.display='block'; this.textContent='Por supuesto'; this.onclick=function(){document.getElementById('ramen-image').style.display='block'; document.getElementById('itadakimasu').style.display='block'}">¿Qué?</button>
+      <div id="spanish-invite">Querós ir a comer ramen conmigo?</div>
+    </div>
+    <img id="ramen-image" src="ramen.jpg" alt="Ramen">
+    <div id="itadakimasu">いただきます</div>
+  </div>
+  <img id="amor1" class="corner-image" src="amor1.png" alt="Amor 1">
+  <img id="amor2" class="corner-image" src="amor2.png" alt="Amor 2">
+  <img id="amor3" class="corner-image" src="amor3.jpg" alt="Amor 3">
+  <img id="amor4" class="corner-image" src="amor4.png" alt="Amor 4">
+</body>
+</html>
